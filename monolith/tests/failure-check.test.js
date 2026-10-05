@@ -1,6 +1,6 @@
 describe('CI Failure Barrier Validation', () => {
-  it('deliberately fails to verify red CI barrier on pull request', () => {
-    // Deliberate test failure for demonstrating Agile CI barrier
-    expect('red').toBe('green');
+  it('deliberately verified red CI barrier, now passes cleanly', () => {
+    // Verified red-to-green Agile CI barrier remediation
+    expect('green').toBe('green');
   });
 });
