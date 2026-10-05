@@ -2,7 +2,6 @@
 
 [![CI Workflow](https://github.com/naveena-zen/makerspace-booker/actions/workflows/ci.yml/badge.svg)](https://github.com/naveena-zen/makerspace-booker/actions/workflows/ci.yml)
 [![CD Delivery](https://github.com/naveena-zen/makerspace-booker/actions/workflows/cd.yml/badge.svg)](https://github.com/naveena-zen/makerspace-booker/actions/workflows/cd.yml)
-[![Pages Deploy](https://github.com/naveena-zen/makerspace-booker/actions/workflows/pages.yml/badge.svg)](https://github.com/naveena-zen/makerspace-booker/actions/workflows/pages.yml)
 
 A high-reliability university makerspace equipment booking platform built for the academic course **"Agile Project Development with Scrum"**. The system eliminates double-booking collisions and enforces operator safety-certification prerequisites across 3D printers, laser cutters, and open-access workbenches.
 
