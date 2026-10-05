@@ -1,4 +1,4 @@
-# Maker Space Booker
+# MakerSpace Equipment Safety Booking System
 
 [![CI Workflow](https://github.com/naveena-zen/makerspace-booker/actions/workflows/ci.yml/badge.svg)](https://github.com/naveena-zen/makerspace-booker/actions/workflows/ci.yml)
 [![CD Delivery](https://github.com/naveena-zen/makerspace-booker/actions/workflows/cd.yml/badge.svg)](https://github.com/naveena-zen/makerspace-booker/actions/workflows/cd.yml)
