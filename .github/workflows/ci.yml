@@ -1,0 +1,77 @@
+name: CI Pipeline
+
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop, main]
+
+jobs:
+  validate-and-build:
+    name: ${{ matrix.name }} (Node 20 + Docker)
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: monolith
+            dir: monolith
+            image: makerspace-booker-monolith
+          - name: machine-service
+            dir: services/machine-service
+            image: makerspace-booker-machine-service
+          - name: certification-service
+            dir: services/certification-service
+            image: makerspace-booker-certification-service
+          - name: reservation-service
+            dir: services/reservation-service
+            image: makerspace-booker-reservation-service
+          - name: gateway
+            dir: services/gateway
+            image: makerspace-booker-gateway
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Check if service exists
+        id: check_service
+        run: |
+          if [ -d "${{ matrix.dir }}" ] && [ -f "${{ matrix.dir }}/package.json" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "Service directory ${{ matrix.dir }} not present on this branch. Skipping steps."
+          fi
+
+      - name: Setup Node.js 20 with npm cache
+        if: steps.check_service.outputs.exists == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: ${{ matrix.dir }}/package-lock.json
+
+      - name: Install Dependencies (npm ci)
+        if: steps.check_service.outputs.exists == 'true'
+        working-directory: ${{ matrix.dir }}
+        run: npm ci
+
+      - name: Run ESLint
+        if: steps.check_service.outputs.exists == 'true'
+        working-directory: ${{ matrix.dir }}
+        run: npm run lint
+
+      - name: Run Test Suite (Jest)
+        if: steps.check_service.outputs.exists == 'true'
+        working-directory: ${{ matrix.dir }}
+        run: npm test
+
+      - name: Set up Docker Buildx
+        if: steps.check_service.outputs.exists == 'true'
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Container Image
+        if: steps.check_service.outputs.exists == 'true'
+        working-directory: ${{ matrix.dir }}
+        run: docker build -t ${{ matrix.image }}:latest .
