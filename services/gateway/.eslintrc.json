@@ -8,6 +8,9 @@
   "parserOptions": {
     "ecmaVersion": "latest"
   },
+  "ignorePatterns": [
+    "public/**"
+  ],
   "rules": {
     "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }]
   }
