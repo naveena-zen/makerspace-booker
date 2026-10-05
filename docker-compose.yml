@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  machine-service:
+    build:
+      context: ./services/machine-service
+      dockerfile: Dockerfile
+    container_name: makerspace-machine-service
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+    restart: unless-stopped
+
+  certification-service:
+    build:
+      context: ./services/certification-service
+      dockerfile: Dockerfile
+    container_name: makerspace-certification-service
+    ports:
+      - "3002:3002"
+    environment:
+      - PORT=3002
+    restart: unless-stopped
+
+  reservation-service:
+    build:
+      context: ./services/reservation-service
+      dockerfile: Dockerfile
+    container_name: makerspace-reservation-service
+    ports:
+      - "3003:3003"
+    environment:
+      - PORT=3003
+      - MACHINE_SERVICE_URL=http://machine-service:3001
+      - CERTIFICATION_SERVICE_URL=http://certification-service:3002
+    depends_on:
+      - machine-service
+      - certification-service
+    restart: unless-stopped
+
+  gateway:
+    build:
+      context: ./services/gateway
+      dockerfile: Dockerfile
+    container_name: makerspace-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - MACHINE_SERVICE_URL=http://machine-service:3001
+      - CERTIFICATION_SERVICE_URL=http://certification-service:3002
+      - RESERVATION_SERVICE_URL=http://reservation-service:3003
+    depends_on:
+      - machine-service
+      - certification-service
+      - reservation-service
+    restart: unless-stopped
